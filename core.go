@@ -1,19 +1,11 @@
 package main
-    
+
 import (
-    "interfaces/restful"
+	// "interfaces/restful"
+	"interfaces/rpcnode"
 )
-    
+
 func main() {
-   restful.New(9999)
-
-   select{}
+	rpcnode.Init(9999)
+	// restful.New(9999)
 }
-
-
-// listening and hendlers
-// create new context
-// create usecases
-// create repository 
-// usecases(repo)
-// goto usecase
