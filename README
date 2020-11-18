@@ -1,0 +1,31 @@
+default config file
+```json
+    {
+        "database" : {
+            "driver" : "mysql",
+            "host" : "127.0.0.1",
+            "port" : 3306,
+            "login" : "root",
+            "password" : 123,
+            "name_db" : "test",
+            "path" : "./database.db",
+        },
+        "node" : {
+            port : 8080,
+            "secret" : "secret_key",
+        }
+        "rest" : {
+            "port" : 3030,
+            "secret" : "secret_key"
+        }
+    }
+```
+
+database.driver : mysql, postgres, mssql, sqlite3
+
+
+example usage
+
+``` ./core --config config.json ```
+
+
