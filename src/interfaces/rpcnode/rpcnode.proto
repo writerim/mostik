@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package rpcnode;
+
+
+
+service RpcNode {
+  // Sends a greeting
+  rpc Sync (RpcNodeRequest) returns (RpcNodeResponse) {}
+}
+
+message RpcNodeRequest {
+    message Library {
+        string ident = 1;
+        string version = 2;
+    }
+    message LibField {
+        string type_field = 1;
+        int32 max_size = 2;
+        int32 min_size = 3;
+        string default_value = 4;
+        string patern = 5;
+    }
+
+    string api_key = 1;
+    string uid = 2;
+    int32 licences = 3;
+    string start_licences = 4;
+    string stop_licences = 5;
+    string version = 6;
+    Library libraries = 7;
+    map<string,string> lang = 8;
+    repeated LibField libraries_fields = 9;
+}
+
+
+message RpcNodeResponse {
+    string result = 1;
+}
