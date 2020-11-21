@@ -4,7 +4,6 @@ import (
 	"flag"
 	"github.com/sirupsen/logrus"
 	// "interfaces/restful"
-	"encoding/json"
 	"interfaces/rpcnode"
 	"io/ioutil"
 )
@@ -22,13 +21,7 @@ func main() {
 		logrus.Warn(err.Error())
 	}
 
-	config := Config{}
-	err = json.Unmarshal([]byte(file), &config)
-	if err != nil {
-		logrus.Warn(err.Error())
-	}
-
-	err_config := config.validate()
+	_, err_config := NewConfig([]byte(file))
 	if err_config != nil {
 		logrus.Warn(err.Error())
 	}
