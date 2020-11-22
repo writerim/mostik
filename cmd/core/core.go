@@ -3,6 +3,11 @@ package main
 import (
 	"encoding/json"
 	"errors"
+	"flag"
+	"github.com/sirupsen/logrus"
+	"interfaces/restful"
+	"interfaces/rpcnode"
+	"io/ioutil"
 )
 
 const (
@@ -138,4 +143,26 @@ func (p ConfigPort) validate() error {
 		return errors.New(OUT_RANGE_PORT)
 	}
 	return nil
+}
+
+func main() {
+
+	// example usage
+	// ./core --config path_to_config.json
+	path_to_config := flag.String("path_config", "", "set path to config file")
+	flag.Parse()
+
+	// parse config
+	file, err := ioutil.ReadFile(*path_to_config)
+	if err != nil {
+		logrus.Fatalf("Error: Read config file: %s", err.Error())
+	}
+
+	config, err_config := NewConfig([]byte(file))
+	if err_config != nil {
+		logrus.Warn(err.Error())
+	}
+
+	rpcnode.Init(int(config.Node.Port))
+	restful.Init(int(config.Rest.Port))
 }

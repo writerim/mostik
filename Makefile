@@ -9,3 +9,4 @@ install:
 	go get github.com/hoisie/web
 	go get google.golang.org/grpc/encoding/proto
 	go get github.com/sirupsen/logrus
+	go get github.com/patrickmn/go-cache
