@@ -1,6 +1,7 @@
 package restful
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/hoisie/web"
 	"github.com/patrickmn/go-cache"
@@ -22,4 +23,13 @@ func Init(port int) *web.Server {
 
 	logrus.Infof("Запуск на :%d", port)
 	return server
+}
+
+func toJSON(out interface{}) string {
+	e, err := json.Marshal(out)
+	if err != nil {
+		logrus.Fatal("toJSON ", err.Error())
+		return `{}`
+	}
+	return string(e)
 }

@@ -1,5 +1,13 @@
 package entity
 
+import (
+	"time"
+)
+
+func (UserLog) TableName() string {
+	return "user_log"
+}
+
 type UserLog struct {
 	Id       int `gorm:"primary_key"`
 	Action   string

@@ -7,3 +7,7 @@ type PersonalArea struct {
 	ParentId int
 	Location string
 }
+
+type PersonalAreaRepository interface {
+	Save(e PersonalArea) (PersonalArea, error)
+}

@@ -7,3 +7,9 @@ type TimeZone struct {
 	DiffMinutes int
 	Ident       string
 }
+
+type TimeZoneRepo interface {
+	Save(rule TimeZone) (TimeZone, error)
+}
+
+type TimeZoneUseCases interface{}

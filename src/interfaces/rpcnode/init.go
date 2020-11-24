@@ -21,7 +21,6 @@ func Init(port int) {
 
 	RegisterRpcNodeServer(grpcServer, &server{})
 	grpcServer.Serve(listener)
-
 }
 
 type server struct {

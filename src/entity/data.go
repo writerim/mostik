@@ -1,5 +1,9 @@
 package entity
 
+import (
+	"time"
+)
+
 type Data struct {
 	Id          int `gorm:"primary_key"`
 	DeviceId    int

@@ -5,8 +5,18 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+func handler_option(ctx *web.Context, url string) string {
+	ctx.SetHeader("Access-Control-Allow-Methods", "GET, HEAD, PUT, PATCH, POST, DELETE, OPTIONS", true)
+	ctx.SetHeader("Access-Control-Allow-Origin", "*", true)
+	ctx.SetHeader("Access-Control-Allow-Headers", "Content-Type, Token", true)
+	return ``
+}
+
 func init_router(server *web.Server) {
 	logrus.Info("Инициализация роутов...")
+
+	server.Match("DELETE", `(.*)`, handler_option)
+	server.Match("OPTIONS", `(.*)`, handler_option)
 
 	/*
 		// auth

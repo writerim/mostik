@@ -4,10 +4,13 @@ import (
 	"encoding/json"
 	"errors"
 	"flag"
+	"fmt"
+	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 	"interfaces/restful"
 	"interfaces/rpcnode"
 	"io/ioutil"
+	"repositories"
 )
 
 const (
@@ -42,6 +45,7 @@ type (
 		Password string         `json:"password"`
 		NameDb   string         `json:"name_db"`
 		Path     string         `json:"path"`
+		Debug    bool           `json:"debug"`
 	}
 
 	Node struct {
@@ -81,6 +85,35 @@ func (c Config) validate() error {
 		return err
 	}
 	return nil
+}
+
+func (d Database) stringConnect() string {
+	switch d.Driver {
+	case DATABASE_MYSQL:
+		return fmt.Sprintf(`%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=UTC`,
+			d.Login,
+			d.Password,
+			d.Host,
+			d.Port,
+			d.NameDb)
+	case DATABASE_MSSQL:
+		return fmt.Sprintf(`sqlserver://%s:%s@%s:%d?database=%s`,
+			d.Login,
+			d.Password,
+			d.Host,
+			d.Port,
+			d.NameDb)
+	case DATABASE_SQLITE3:
+		return d.Path
+	case DATABASE_POSTGRES:
+		return fmt.Sprintf(`host=%s port=%d user=%s dbname=%s password=%s`,
+			d.Host,
+			d.Port,
+			d.Login,
+			d.NameDb,
+			d.Password)
+	}
+	return ""
 }
 
 /*
@@ -158,11 +191,27 @@ func main() {
 		logrus.Fatalf("Error: Read config file: %s", err.Error())
 	}
 
+	logrus.Info("Read config")
 	config, err_config := NewConfig([]byte(file))
 	if err_config != nil {
-		logrus.Warn(err.Error())
+		logrus.Fatal(err_config.Error())
 	}
+	logrus.Info("Read config successfull")
 
-	rpcnode.Init(int(config.Node.Port))
-	restful.Init(int(config.Rest.Port))
+	db, err := gorm.Open(config.Database.Driver, config.Database.stringConnect())
+	if err != nil {
+		logrus.Fatal(err.Error())
+	}
+	db.LogMode(config.Database.Debug)
+	repositories.Init(db)
+
+	logrus.Info("Start rpc service")
+	go rpcnode.Init(int(config.Node.Port))
+	logrus.Info("Start rpc service successfull")
+
+	logrus.Info("Start rest service")
+	go restful.Init(int(config.Rest.Port))
+	logrus.Info("Start rest service successfull")
+
+	select {}
 }
