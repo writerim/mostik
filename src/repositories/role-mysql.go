@@ -17,6 +17,7 @@ type RoleRepository interface {
 	GetById(id int) (entity.Role, error)
 	Save(role entity.Role) (entity.Role, error)
 	GetByIdentByPersonalAreaId(string, int) (entity.Role, error)
+	GetDefaultByPersonalAreaId(int) (entity.Role, error)
 }
 
 func NewMysqlRoleRepository(db *gorm.DB) entity.RoleRepository {
@@ -31,11 +32,11 @@ func (m *mysqlRoleRepo) GetById(id int) (entity.Role, error) {
 }
 
 func (m *mysqlRoleRepo) Save(role entity.Role) (entity.Role, error) {
-	// select parse return
-	return entity.Role{}, nil
+	m.DB.Create(&role)
+	return role, nil
 }
 
-func (m *mysqlRoleRepo) GetDefault(personal_area_id int) (entity.Role, error) {
+func (m *mysqlRoleRepo) GetDefaultByPersonalAreaId(personal_area_id int) (entity.Role, error) {
 
 	if r, err := m.GetByIdentByPersonalAreaId(DEFAULT_IDENT, personal_area_id); err == nil && r.Id == 0 {
 		r := entity.Role{}

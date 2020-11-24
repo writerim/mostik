@@ -20,6 +20,6 @@ func NewMysqlTimeZoneRepository(db *gorm.DB) entity.TimeZoneRepo {
 }
 
 func (tz *mysqlTimeZoneRepo) Save(t entity.TimeZone) (entity.TimeZone, error) {
-	tz.Save(t)
+	tz.DB.Create(&t)
 	return t, nil
 }

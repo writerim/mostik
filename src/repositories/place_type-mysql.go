@@ -20,6 +20,6 @@ func NewMysqlPlaceTypeRepository(db *gorm.DB) entity.PlaceTypeRepository {
 }
 
 func (m *mysqlPlaceTypeRepo) Save(e entity.PlaceType) (entity.PlaceType, error) {
-	m.DB.Create(e)
+	m.DB.Create(&e)
 	return e, nil
 }

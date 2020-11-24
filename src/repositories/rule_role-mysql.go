@@ -20,6 +20,6 @@ func NewMysqlRuleRoleRepository(db *gorm.DB) entity.RuleRoleRepository {
 }
 
 func (m *mysqlRuleRoleRepo) Save(rr entity.RuleRoles) (entity.RuleRoles, error) {
-	// select parse return
-	return entity.RuleRoles{}, nil
+	m.DB.Create(&rr)
+	return rr, nil
 }

@@ -51,7 +51,8 @@ func (m *mysqlUserRepo) Save(user entity.User) (entity.User, error) {
 		return entity.User{}, nil
 	}
 
-	return entity.User{}, nil
+	m.DB.Create(&user)
+	return user, nil
 }
 
 // Валидация данных
@@ -72,6 +73,16 @@ func (m *mysqlUserRepo) validate(user entity.User) error {
 	v := make(map[string]interface{})
 	if err := json.Unmarshal([]byte(user.Properties), &v); err != nil {
 		return err
+	}
+
+	// Get role by default
+	if user.RoleId == 0 {
+		role := NewMysqlRoleRepository(m.DB)
+		default_role, err := role.GetDefaultByPersonalAreaId(user.PersonalAreaId)
+		if err != nil {
+			return err
+		}
+		user.RoleId = default_role.Id
 	}
 	return nil
 }

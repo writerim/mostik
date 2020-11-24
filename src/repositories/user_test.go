@@ -20,12 +20,10 @@ func TestGetById(t *testing.T) {
 		PersonalAreaId: 1,
 		Email:          "sdsdsd@sdsd",
 		ApiToken:       "dsdsds",
-		Properties:     "{}",
 		Location:       "sdsds",
-		RoleId:         232,
 	}
 
 	us, err := ur.Save(u)
-	fmt.Println(us, err)
+	fmt.Println(us.Id, err)
 
 }

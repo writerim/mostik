@@ -20,6 +20,6 @@ func NewMysqlPersonalAreaRepository(db *gorm.DB) entity.PersonalAreaRepository {
 }
 
 func (m *mysqlPersonlAreaRepo) Save(e entity.PersonalArea) (entity.PersonalArea, error) {
-	m.Save(e)
+	m.DB.Create(&e)
 	return e, nil
 }

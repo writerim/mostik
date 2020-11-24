@@ -22,5 +22,6 @@ func _set_connect(t *testing.T) *gorm.DB {
 		t.Fatal("Connect to database: ", err.Error())
 		return nil
 	}
+	Init(db)
 	return db
 }

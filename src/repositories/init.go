@@ -43,28 +43,31 @@ func Init(db *gorm.DB) {
 	db.AutoMigrate(entity.Data{})
 
 	logrus.Info("Лог пользователя")
-	db.AutoMigrate(&entity.UserLog{})
+	db.AutoMigrate(entity.UserLog{})
 
 	logrus.Info("Пользователи")
-	db.AutoMigrate(&entity.User{})
+	db.AutoMigrate(entity.User{})
 
 	logrus.Info("Временные зоны")
-	db.AutoMigrate(&entity.TimeZone{})
+	db.AutoMigrate(entity.TimeZone{})
 
 	logrus.Info("Роли")
 	db.AutoMigrate(entity.Role{})
 
 	logrus.Info("Праила")
-	db.AutoMigrate(&entity.Rule{})
+	db.AutoMigrate(entity.Rule{})
 
 	logrus.Info("Связь ролей и правил")
-	db.AutoMigrate(&entity.RuleRoles{})
+	db.AutoMigrate(entity.RuleRoles{})
 
 	logrus.Info("Типы объектов")
 	db.AutoMigrate(entity.PlaceType{})
 
 	logrus.Info("Объекты")
 	db.AutoMigrate(entity.Place{})
+
+	logrus.Info("Личные кабинеты")
+	db.AutoMigrate(entity.PersonalArea{})
 
 	// END MIGRATE
 

@@ -21,8 +21,8 @@ func NewMysqlRuleRepository(db *gorm.DB) entity.RuleRepository {
 }
 
 func (m *mysqlRuleRepo) Save(rule entity.Rule) (entity.Rule, error) {
-	// select parse return
-	return entity.Rule{}, nil
+	m.DB.Create(&rule)
+	return rule, nil
 }
 
 func (m *mysqlRuleRepo) GetAll() ([]entity.Rule, error) {

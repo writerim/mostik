@@ -14,4 +14,5 @@ type RoleRepository interface {
 	GetById(id int) (Role, error) // Получение по id
 	Save(Role) (Role, error)      // Сохранение
 	GetByIdentByPersonalAreaId(string, int) (Role, error)
+	GetDefaultByPersonalAreaId(int) (Role, error)
 }
