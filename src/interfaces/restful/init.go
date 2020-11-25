@@ -2,19 +2,25 @@ package restful
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/hoisie/web"
-	"github.com/patrickmn/go-cache"
+	"github.com/jinzhu/gorm"
 	"github.com/sirupsen/logrus"
 )
 
-var sessions *cache.Cache
+const (
+	NOT_INIT_SESSION = "session not init"
+)
 
-func init() {
-	sessions = cache.New(cache.NoExpiration, cache.NoExpiration)
+// Определяем дефолтную запись в сессию
+var AddSession = func(user_id int) (string, error) {
+	return "", errors.New(NOT_INIT_SESSION)
 }
 
-func Init(port int) *web.Server {
+var db *gorm.DB
+
+func Init(port int, db *gorm.DB) *web.Server {
 	server := web.NewServer()
 
 	init_router(server)

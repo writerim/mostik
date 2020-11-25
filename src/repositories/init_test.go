@@ -8,7 +8,7 @@ import (
 	"testing"
 )
 
-func _set_connect(t *testing.T) *gorm.DB {
+func SetConnect(t *testing.T) *gorm.DB {
 
 	txdb.Register("mostik_test",
 		"mysql",

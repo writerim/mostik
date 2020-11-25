@@ -13,6 +13,12 @@ import (
 	"repositories"
 )
 
+var sessions *cache.Cache
+
+func init() {
+	sessions = cache.New(cache.NoExpiration, cache.NoExpiration)
+}
+
 const (
 	DATABASE_UNDEFINED_DRIVER string = "undefined driver"
 	DATABASE_INVALID_HOST     string = "invalid host"
@@ -48,11 +54,16 @@ type (
 		Debug    bool           `json:"debug"`
 	}
 
+	Session struct {
+		Secr
+	}
+
 	Node struct {
 		TCPService
 	}
 	Rest struct {
-		TCPService
+		Port        ConfigPort `json:"port"`
+		SessionLive int        `json:"session_live"` // Время жизни сессии
 	}
 
 	Config struct {
@@ -210,8 +221,44 @@ func main() {
 	logrus.Info("Start rpc service successfull")
 
 	logrus.Info("Start rest service")
+
+	restful.AddSession = add_to_session
+	// restful.GetSession = get_session
+	// restful.DelSession = del_session
+
 	go restful.Init(int(config.Rest.Port))
 	logrus.Info("Start rest service successfull")
 
 	select {}
+}
+
+/*
+	Добавление в сессию пользователя
+*/
+func add_to_session(user_id int) (string, error) {
+
+	if user_id == 0 {
+		return "", errors.New("user id == 0. add to session not access")
+	}
+
+	out_str_g, _ := uuid.NewUUID()
+	out_str := out_str_g.String()
+
+	live := cache.NoExpiration
+
+	for ident, _ := range sessions.Items() {
+		id_user, _ := sessions.Get(ident)
+		if id_user.(int) == user_id {
+			sessions.Set(out_str, user_id, live)
+			return out_str, nil
+		}
+	}
+
+	if config.SessionLive != 0 {
+		live = time.Duration(config.SessionLive) * time.Second
+	}
+
+	sessions.Add(out_str, user_id, live)
+
+	return out_str, nil
 }

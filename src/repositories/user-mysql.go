@@ -22,6 +22,7 @@ type UserRepository interface {
 	GetById(id int) (entity.User, error)
 	Save(user entity.User) (entity.User, error)
 	GetCountAll() (int, error)
+	GetByLoginPasswordAny(login, password string)
 }
 
 func NewMysqlUserRepository(db *gorm.DB) entity.UserRepository {
@@ -33,6 +34,12 @@ func NewMysqlUserRepository(db *gorm.DB) entity.UserRepository {
 func (m *mysqlUserRepo) GetById(id int) (entity.User, error) {
 	// select parse return
 	return entity.User{}, nil
+}
+
+func (m *mysqlUserRepo) GetByLoginPasswordAny(login, password string) (entity.User, error) {
+	record := entity.User{}
+	m.DB.Where("login = ? and password = ?", login, password).First(&record)
+	return record, nil
 }
 
 func (m *mysqlUserRepo) GetCountAll() (int, error) {
@@ -47,8 +54,8 @@ func (m *mysqlUserRepo) GetCountAll() (int, error) {
 
 func (m *mysqlUserRepo) Save(user entity.User) (entity.User, error) {
 
-	if err := m.validate(user); err != nil {
-		return entity.User{}, nil
+	if err := m.validate(&user); err != nil {
+		return entity.User{}, err
 	}
 
 	m.DB.Create(&user)
@@ -56,7 +63,7 @@ func (m *mysqlUserRepo) Save(user entity.User) (entity.User, error) {
 }
 
 // Валидация данных
-func (m *mysqlUserRepo) validate(user entity.User) error {
+func (m *mysqlUserRepo) validate(user *entity.User) error {
 	if user.Login == "" {
 		return errors.New(EMPTY_LOGIN)
 	}
@@ -84,5 +91,8 @@ func (m *mysqlUserRepo) validate(user entity.User) error {
 		}
 		user.RoleId = default_role.Id
 	}
+
+	user.Password = entity.CompressPass(user.Password)
+
 	return nil
 }

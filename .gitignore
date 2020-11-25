@@ -2,3 +2,6 @@ src/github.com
 src/golang.org
 src/google.golang.org
 config.json
+api
+swag
+src/pkg
